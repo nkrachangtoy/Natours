@@ -11,8 +11,8 @@ const morgan = require('morgan');
  *      REQUIER ROUTES
  * -------------------------------
  */
-const tourRouter = require('./Routes/tourRoutes');
-const userRouter = require('./Routes/userRoutes');
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
 
 // INITIALIZE EXPRESS
 const app = express();
