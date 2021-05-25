@@ -5,6 +5,7 @@
  */
 const express = require('express');
 const fs = require('fs');
+const morgan = require('morgan');
 
 // INITIALIZE EXPRESS
 const app = express();
@@ -14,7 +15,20 @@ const app = express();
  *      MIDDLEWARES
  * ---------------------
  */
+app.use(morgan('dev'));
+
 app.use(express.json());
+
+app.use((req,res,next)=>{
+    console.log('Hello from the middleware');
+    next();
+});
+
+app.use((req,res,next)=>{
+    req.requestTime = new Date().toISOString();
+    next();
+})
+
 
 // READ FILE FROM DATA FOLDER
 const tours = JSON.parse(
@@ -22,14 +36,15 @@ const tours = JSON.parse(
 );
 
 /**
- * --------------------
- *      ROUTES
- * --------------------
+ * -------------------------------
+ *      ROUTES HANDLERS
+ * -------------------------------
  */
 
 const getAllTours = (req, res) => {
     res.status(200).json({
         status: 'success',
+        requestedAt: req.requestTime,
         results: tours.length,
         data: {
             tours
@@ -108,6 +123,12 @@ const deleteTour = (req,res) => {
         data: null
     });
 };
+
+/**
+ * -------------------------------
+ *      ROUTES 
+ * -------------------------------
+ */
 
 app
     .route('/api/v1/tours')
