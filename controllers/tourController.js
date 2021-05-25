@@ -5,10 +5,22 @@
  */
 const fs = require('fs');
  
- // READ FILE FROM DATA FOLDER
- const tours = JSON.parse(
+// READ FILE FROM DATA FOLDER
+const tours = JSON.parse(
      fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
- );
+);
+
+exports.checkId = (req,res,next,val) => {
+    console.log(`Tour Id is: ${val}`);
+    if(req.params.id * 1 > tours.length){
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Invalid Id'
+        });
+    }
+    next();
+};
+
 
 /**
  * -------------------------------
@@ -30,14 +42,6 @@ const fs = require('fs');
 exports.getTour = (req, res) => {
     const id = req.params.id * 1;
     const tour = tours.find(tour => tour.id === id);
-
-    // Handling invalid tour Id
-    if(id > tours.length){
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid Id'
-        })
-    };
 
     res.status(200).json({
         status: 'success',
@@ -68,13 +72,6 @@ exports.createTour = (req,res) => {
 };
 
 exports.updateTour = (req,res)=>{
-    // Handling invalid tour Id
-    if(req.params.id * 1 > tours.length){
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid Id'
-        });
-    }
     // Placehoulder code block for updating tour
     res.status(200).json({
         status: 'success',
@@ -85,13 +82,6 @@ exports.updateTour = (req,res)=>{
 };
 
 exports.deleteTour = (req,res) => {
-    // Handling invalid tour Id
-    if(req.params.id * 1 > tours.length){
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid Id'
-        });
-    }
     // Placehoulder code block for updating tour
     res.status(204).json({
         status: 'success',
