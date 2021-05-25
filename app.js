@@ -83,6 +83,25 @@ app.post('/api/v1/tours', (req,res) => {
     });
 });
 
+// Update tour by Id
+app.patch('/api/v1/tours/:id', (req,res)=>{
+
+    // Handling invalid tour Id
+    if(req.params.id * 1 > tours.length){
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Invalid Id'
+        })
+    }
+    // Placehoulder code block for updating tour
+    res.status(200).json({
+        status: 'success',
+        data: {
+            tour: '<Updated tour>'
+        }
+    })
+})  
+
 
 /**
  * --------------------
