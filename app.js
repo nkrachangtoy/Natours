@@ -27,8 +27,7 @@ const tours = JSON.parse(
  * --------------------
  */
 
-// Get All tours
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
     res.status(200).json({
         status: 'success',
         results: tours.length,
@@ -36,12 +35,9 @@ app.get('/api/v1/tours', (req, res) => {
             tours
         }
     })
-});
+};
 
-// Get tour by id
-app.get('/api/v1/tours/:id', (req, res) => {
-    console.log(req.params);
-
+const getTourById = (req, res) => {
     const id = req.params.id * 1;
     const tour = tours.find(tour => tour.id === id);
 
@@ -51,7 +47,7 @@ app.get('/api/v1/tours/:id', (req, res) => {
             status: 'fail',
             message: 'Invalid Id'
         })
-    }
+    };
 
     res.status(200).json({
         status: 'success',
@@ -59,11 +55,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
             tour
         }
     });
-});
+};
 
-// Create new tour
-app.post('/api/v1/tours', (req,res) => {
-    // console.log(req.body);
+const createTour = (req,res) => {
     const newId = tours[tours.length - 1].id + 1;
     // Object.assign allows us to create a new object by merging it to the existing file
     const newTour = Object.assign({id: newId}, req.body);
@@ -81,11 +75,9 @@ app.post('/api/v1/tours', (req,res) => {
             }
         });
     });
-});
+};
 
-// Update tour by Id
-app.patch('/api/v1/tours/:id', (req,res)=>{
-
+const updateTour = (req,res)=>{
     // Handling invalid tour Id
     if(req.params.id * 1 > tours.length){
         return res.status(404).json({
@@ -100,11 +92,9 @@ app.patch('/api/v1/tours/:id', (req,res)=>{
             tour: '<Updated tour>'
         }
     });
-});
+};
 
-// Delete tour by Id
-app.delete('/api/v1/tours/:id', (req,res)=>{
-
+const deleteTour = (req,res) => {
     // Handling invalid tour Id
     if(req.params.id * 1 > tours.length){
         return res.status(404).json({
@@ -117,8 +107,18 @@ app.delete('/api/v1/tours/:id', (req,res)=>{
         status: 'success',
         data: null
     });
-});
+};
 
+app
+    .route('/api/v1/tours')
+    .get(getAllTours)
+    .post(createTour);
+
+app
+    .route('/api/v1/tours/:id')
+    .get(getTourById)
+    .patch(updateTour)
+    .delete(deleteTour);
 
 /**
  * --------------------
