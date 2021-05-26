@@ -116,7 +116,7 @@ dist
 .pnp.*
 
 # Prettierrc
-*.prettierrc
+.prettierrc
 
 # Eslint config
 .eslintrc.json

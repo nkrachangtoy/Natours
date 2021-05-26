@@ -20,6 +20,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
     "express": "^4.17.1",
+    "mongoose": "^5.12.11",
     "morgan": "^1.10.0",
     "prettier": "^2.3.0"
   }
