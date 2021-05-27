@@ -8,7 +8,7 @@ const {getAllTours, getTour, createTour, updateTour, deleteTour, checkId, checkB
 
 const router = express.Router();
 
-router.param('id', checkId);
+// router.param('id', checkId);
 
 
 /**
