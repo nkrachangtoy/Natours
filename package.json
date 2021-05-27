@@ -11,6 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.11",
+    "morgan": "^1.10.0"
+    
+  },
+  "devDependencies": {
     "eslint": "^7.27.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
@@ -19,9 +25,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
-    "express": "^4.17.1",
-    "mongoose": "^5.12.11",
-    "morgan": "^1.10.0",
     "prettier": "^2.3.0"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   }
 }

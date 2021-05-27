@@ -5,19 +5,6 @@
  */
 const Tour = require('./../models/tourModel');
  
-exports.checkBody = (req, res, next) => {
-    const name = req.body.name;
-    const price = req.body.price;
-    if(!name || !price){
-        return res.status(400).json({
-            status: 'fail',
-            message: 'Missing name or price'
-        })
-    }
-    next();
-};
-
-
 /**
  * -------------------------------
  *      ROUTES HANDLERS
@@ -44,13 +31,23 @@ exports.getTour = (req, res) => {
     });
 };
 
-exports.createTour = (req,res) => {
-    res.status(201).json({
-        status: 'success',
-        data: {
-            tour: newTour
-        }
-    });
+exports.createTour = async (req,res) => {
+    try {
+        // create() returns promises
+        const newTour = await Tour.create(req.body)
+
+        res.status(201).json({
+            status: 'success',
+            data: {
+                tour: newTour
+            }
+        });
+    } catch (err) {
+        res.status(400).json({
+            status: 'fail',
+            message: 'placeholder for error handling'
+        });
+    }
 };
 
 exports.updateTour = (req,res)=>{
