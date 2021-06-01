@@ -18,7 +18,7 @@ const Tour = require('./../models/tourModel');
  * @throws Will throw an error if no tours found
  */
 exports.getAllTours = async (req, res) => {
-    // Get all tours with built-in method 'find()'  from mongoDB
+    // Get all tours with built-in method 'find()' from mongoose
     // This returns a promise
     try {
         const tours = await Tour.find();
@@ -67,6 +67,12 @@ exports.getTour = async (req, res) => {
     }
 };
 
+/**
+ * Create a new tour
+ * @CREATE
+ * @param {*} req.body - tour's body in JSON format 
+ * @returns a new tour object
+ */
 exports.createTour = async (req,res) => {
     try {
         // create() returns promises
@@ -79,28 +85,62 @@ exports.createTour = async (req,res) => {
             }
         });
     } catch (err) {
-        res.status(400).json({
+        res.status(404).json({
             status: 'fail',
-            message: 'placeholder for error handling'
+            message: err
         });
     }
 };
 
-exports.updateTour = (req,res)=>{
-    // Placehoulder code block for updating tour
-    res.status(200).json({
-        status: 'success',
-        // data: {
-        //     tour: '<Updated tour>'
-        // }
-    });
+/**
+ * Update tour
+ * @PATCH
+ * @param {*} req.params.id - tour id
+ * @param {*} req.body - tour's body
+ * @returns updated tour object
+ * @throws Will throw an error if tour or tour's body is invalid
+ */
+exports.updateTour = async (req,res)=>{
+    const id = req.params.id;
+    const body = req.body;
+    try {
+        const updatedTour = await Tour.findByIdAndUpdate(id, body, {
+            new: true,
+            runValidators: true
+        });
+        res.status(200).json({
+            status: 'success',
+            data: {
+                updatedTour
+            }
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        });
+    }
 };
 
-exports.deleteTour = (req,res) => {
-    // Placehoulder code block for deleting tour
-    res.status(204).json({
-        status: 'success',
-        data: null
-    });
+/**
+ * Delete tour by Id
+ * @DELETE
+ * @param {*} req.params.id - tour id 
+ * @throws Will throw an error if tour is not found
+ */
+exports.deleteTour = async (req,res) => {
+    const id = req.params.id;
+    try {
+        await Tour.findByIdAndDelete(id);
+        res.status(204).json({
+            status: 'success',
+            data: null
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        });
+    }
 };
 
