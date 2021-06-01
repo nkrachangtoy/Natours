@@ -18,11 +18,21 @@ const Tour = require('./../models/tourModel');
  * @throws Will throw an error if no tours found
  */
 exports.getAllTours = async (req, res) => {
-    // Get all tours with built-in method 'find()' from mongoose
-    // This returns a promise
     try {
-        const tours = await Tour.find();
-    
+        // Build Query
+        const queryObj = {...req.query};
+        const excludedFields = ['page', 'sort', 'limit', 'fields'];
+        
+        // Loop through the array and delete words from the queryObj
+        excludedFields.forEach(el => delete queryObj[el]);
+        
+        const query = Tour.find(queryObj);
+
+        // Execute Query
+        // Get all tours with built-in method 'find()' from mongoose
+        // This returns a promise   
+        const tours = await query;
+
         res.status(200).json({
             status: 'success',
             results: tours.length,
@@ -47,8 +57,9 @@ exports.getAllTours = async (req, res) => {
  * @throws Will throw an error if no tour found
  */
 exports.getTour = async (req, res) => {
-    const id = req.params.id;
     try {
+        const id = req.params.id;
+
         const tour = await Tour.findById(id);
         // This would work the same way
         // Tour.findOne({_id: req.params.id}) 
@@ -101,9 +112,10 @@ exports.createTour = async (req,res) => {
  * @throws Will throw an error if tour or tour's body is invalid
  */
 exports.updateTour = async (req,res)=>{
-    const id = req.params.id;
-    const body = req.body;
     try {
+        const id = req.params.id;
+        const body = req.body;
+
         const updatedTour = await Tour.findByIdAndUpdate(id, body, {
             new: true,
             runValidators: true
@@ -129,8 +141,9 @@ exports.updateTour = async (req,res)=>{
  * @throws Will throw an error if tour is not found
  */
 exports.deleteTour = async (req,res) => {
-    const id = req.params.id;
     try {
+        const id = req.params.id;
+
         await Tour.findByIdAndDelete(id);
         res.status(204).json({
             status: 'success',
