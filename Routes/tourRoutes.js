@@ -4,7 +4,7 @@
  * -------------------------------
  */
 const express = require('express');
-const {getAllTours, getTour, createTour, updateTour, deleteTour} = require('../controllers/tourController');
+const {getAllTours, getTour, createTour, updateTour, deleteTour, aliasTopTours} = require('../controllers/tourController');
 
 const router = express.Router();
 
@@ -16,6 +16,10 @@ const router = express.Router();
  *      ROUTER
  * -------------------------------
  */
+
+router
+    .route('/top-5-tours')
+    .get(aliasTopTours,getAllTours)
 
 router
     .route('/')
