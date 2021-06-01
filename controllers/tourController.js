@@ -7,11 +7,17 @@ const Tour = require('./../models/tourModel');
  
 /**
  * -------------------------------
- *      ROUTES HANDLERS
+ *            LOGICS
  * -------------------------------
  */
 
- exports.getAllTours = async (req, res) => {
+/**
+ * Retrieve all tours
+ * @GET
+ * @returns Array of tours
+ * @throws Will throw an error if no tours found
+ */
+exports.getAllTours = async (req, res) => {
     // Get all tours with built-in method 'find()'  from mongoDB
     // This returns a promise
     try {
@@ -33,13 +39,32 @@ const Tour = require('./../models/tourModel');
     }
 };
 
-exports.getTour = (req, res) => {
-    res.status(200).json({
-        status: 'success',
-        // data: {
-        //     tour
-        // }
-    });
+/**
+ * Retrieve tour by Id
+ * @GET
+ * @param {*} req.param.id - tour id
+ * @returns Tour object
+ * @throws Will throw an error if no tour found
+ */
+exports.getTour = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const tour = await Tour.findById(id);
+        // This would work the same way
+        // Tour.findOne({_id: req.params.id}) 
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                tour
+            }
+        });
+    } catch (err) {
+         res.status(404).json({
+            status: 'fail',
+            message: err
+        });
+    }
 };
 
 exports.createTour = async (req,res) => {
