@@ -42,6 +42,14 @@ exports.getAllTours = async (req, res) => {
             query = query.sort('-createdAt');
         }
 
+        // Field limiting
+        if(req.query.fields){
+            const fields = req.query.fields.split(',').join(' ');
+            query = query.select('name duration price');
+        }else{
+            query = query.select('-__v');
+        }
+
         // Execute Query
         // Get all tours with built-in method 'find()' from mongoose
         // This returns a promise   
