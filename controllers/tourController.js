@@ -4,7 +4,7 @@
  * -------------------------------
  */
 const Tour = require('./../models/tourModel');
- 
+const APIFeatures = require('./../utils/apiFeatures');
 /**
  * -------------------------------
  *            LOGICS
@@ -27,51 +27,15 @@ exports.aliasTopTours = (req,res,next) => {
  */
 exports.getAllTours = async (req, res) => {
     try {
-        // Build Query
-        // Filtering
-        const queryObj = {...req.query};
-        const excludedFields = ['page', 'sort', 'limit', 'fields'];
-        
-        // Loop through the array and delete words from the queryObj
-        excludedFields.forEach(el => delete queryObj[el]);
-        
-        // Advanced Filtering
-        let queryStr = JSON.stringify(queryObj);
-        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-
-        let query = Tour.find(JSON.parse(queryStr));
-
-        // Sorting
-        if(req.query.sort){
-            const sortBy = req.query.sort.split(',').join(' ');
-            query = query.sort(sortBy);
-        } else {
-            // when use $skip with $sort - _id is require as any duplicates can cause errors
-            query = query.sort('-createdAt _id');
-        }
-
-        // Field limiting
-        if(req.query.fields){
-            const fields = req.query.fields.split(',').join(' ');
-            query = query.select(fields);
-        } else {
-            query = query.select('-__v');
-        }
-
-        // Pagination
-        const page = Number(req.query.page) || 1;
-        const limit = Number(req.query.limit) || 100;
-        const skip = (page - 1) * limit;
-
-        query = query.skip(skip).limit(limit);
-
-        if(req.query.page){
-            const numTours = await Tour.countDocuments();
-            if(skip >= numTours) throw new Error('This page does not exist');
-        }
-
         // Execute Query
-        const tours = await query;
+        // Create a new APIFeature obj and pass in 2 params: Tour obj and query string
+        const features = new APIFeatures(Tour, req.query)
+            .filter()
+            .sort()
+            .limitFields()
+            .paginate();
+
+        const tours = await features.query;
 
         res.status(200).json({
             status: 'success',
@@ -82,10 +46,11 @@ exports.getAllTours = async (req, res) => {
         });
         
     } catch (err) {
-        res.status(404).json({
-            status: 'fail',
-            message: err
-        });
+        // res.status(404).json({
+        //     status: 'fail',
+        //     message: err
+        // });
+        console.log(err);
     }
 };
 
