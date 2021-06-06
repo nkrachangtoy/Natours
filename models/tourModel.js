@@ -79,7 +79,7 @@ tourSchema.virtual('durationWeeks').get(function(){
 });
 
 // MIDDLEWARES
-// Document Middleware -> runs before .save() and .create() 
+// DOCUMENT MIDDLEWARE -> runs before .save() and .create() 
 tourSchema.pre('save', function(next){
     // Create a slug 
     this.slug = slugify(this.name, {lower: true});
@@ -96,7 +96,7 @@ tourSchema.pre('save', function(next){
 //     next();
 // })
 
-// Query Middleware
+// QUERY MIDDLEWARE
 tourSchema.pre(/^find/, function(next){
     this.find({secretTour: {$ne: true}});
 
@@ -109,6 +109,15 @@ tourSchema.post(/^find/, function(docs, next){
     // console.log(docs);
     next();
 });
+
+// AGGREGATION MIDDLEWARE
+tourSchema.pre('aggregate', function(next){
+    this.pipeline().unshift({$match: {secretTour: {$ne: true}}});
+
+    console.log(this.pipeline());
+    next();
+})
+
 
 
 const Tour = mongoose.model('Tour', tourSchema);
