@@ -23,9 +23,9 @@ const app = express();
  *      MIDDLEWARES
  * -------------------------------
  */
-if (process.env.NODE_ENV === 'development'){
-    app.use(morgan('dev'));
-};
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.use(express.json());
 
@@ -34,15 +34,14 @@ app.use(express.json());
 //     next();
 // });
 
-app.use((req,res,next)=>{
-    req.requestTime = new Date().toISOString();
-    next();
-})
-
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 /**
  * -------------------------------
- *      ROUTES 
+ *      ROUTES
  * -------------------------------
  */
 
@@ -51,7 +50,7 @@ app.use('/api/v1/users', userRouter);
 
 // ROUTE ERROR HANDLER
 app.all('*', (req, res, next) => {
-    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
 // ERROR HANDLING MIDDLEWARE
